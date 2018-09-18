@@ -1,32 +1,70 @@
-import React, { Component } from 'react'
-import { ScrollView, Text, Image, View } from 'react-native'
-import DevscreensButton from '../../ignite/DevScreens/DevscreensButton.js'
+import React, { Component } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-import { Images } from '../Themes'
+import { RNCamera } from "react-native-camera";
 
-// Styles
-import styles from './Styles/LaunchScreenStyles'
+export default class App extends Component {
+  takePicture = async () => {
+    if (this.camera) {
+      const options = { quality: 0.5, base64: true };
+      const data = await this.camera.takePictureAsync(options);
 
-export default class LaunchScreen extends Component {
-  render () {
+      alert(data.uri);
+    }
+  };
+
+  render() {
     return (
-      <View style={styles.mainContainer}>
-        <Image source={Images.background} style={styles.backgroundImage} resizeMode='stretch' />
-        <ScrollView style={styles.container}>
-          <View style={styles.centered}>
-            <Image source={Images.launch} style={styles.logo} />
-          </View>
-
-          <View style={styles.section} >
-            <Image source={Images.ready} />
-            <Text style={styles.sectionText}>
-              This probably isn't what your app is going to look like. Unless your designer handed you this screen and, in that case, congrats! You're ready to ship. For everyone else, this is where you'll see a live preview of your fully functioning app using Ignite.
-            </Text>
-          </View>
-
-          <DevscreensButton />
-        </ScrollView>
+      <View style={styles.container}>
+        <RNCamera
+          ref={camera => {
+            this.camera = camera;
+          }}
+          style={styles.preview}
+          type={RNCamera.Constants.Type.back}
+          autoFocus={RNCamera.Constants.AutoFocus.on}
+          flashMode={RNCamera.Constants.FlashMode.off}
+          permissionDialogTitle={"Permission to use camera"}
+          permissionDialogMessage={
+            "We need your permission to use your camera phone"
+          }
+        />
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity onPress={this.takePicture} style={styles.capture}>
+            <Text style={styles.buttonText}> SNAP </Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    )
+    );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: "column",
+    backgroundColor: "black"
+  },
+  preview: {
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "center"
+  },
+  buttonContainer: {
+    flex: 0,
+    flexDirection: "row",
+    justifyContent: "center"
+  },
+  capture: {
+    flex: 0,
+    backgroundColor: "#fff",
+    borderRadius: 5,
+    padding: 15,
+    paddingHorizontal: 20,
+    alignSelf: "center",
+    margin: 20
+  },
+  buttonText: {
+    fontSize: 14
+  }
+});
