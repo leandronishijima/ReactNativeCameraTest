@@ -22,6 +22,7 @@ export default class App extends Component {
           }}
           style={styles.preview}
           type={RNCamera.Constants.Type.back}
+          barCodeTypes={[RNCamera.Constants.BarCodeType.qr]}
           autoFocus={RNCamera.Constants.AutoFocus.on}
           flashMode={RNCamera.Constants.FlashMode.off}
           permissionDialogTitle={"Permission to use camera"}
